@@ -44,7 +44,7 @@ while True:
    if ok:
         (x,y,w,h)=[int(v) for v in bbox]
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2,1)
-        cv2.plt.imshow('Tracking',frame)
+       
         x2=x+w
         y2=y+h
         text1=['aa' ,x ,y ,x2 ,y2]
@@ -54,10 +54,11 @@ while True:
         scale.append(scale1)
        #for listitem in text1:
          #   file.write(f'{listitem}\n')       
-   else :
+   else:
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
+   cv2.imshow('Tracking',frame)
    if cv2.waitKey(1) & 0XFF==27:
-          break
+        break
 
 
 print (scale)
