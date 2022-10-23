@@ -3,14 +3,28 @@ import numpy as np
 import os
 
 
+# Clears command window 
+
 os.system('cls')
+
+# Changes directory
+
 os.chdir("C:\\Users\\Ibrahim\\Desktop\\biomechancs module")
 
-
+# Loads the tracker
 tracker = cv2.TrackerKCF_create()
+
+# Loads a video
 video = cv2.VideoCapture('video.mp4')
+
+#function to read video frame by frame
+
 ok,frame=video.read()
+
+# Sets up a variable called bounding box for user to selecct ROI
 bbox = cv2.selectROI(frame)
+
+# Creates a mask for ROI
 ok = tracker.init(frame,bbox)
 
 fps_cam = 1500 # Change this to the required fps of the video 
@@ -30,6 +44,7 @@ while True:
    if ok:
         (x,y,w,h)=[int(v) for v in bbox]
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2,1)
+        cv2.plt.imshow('Tracking',frame)
         x2=x+w
         y2=y+h
         text1=['aa' ,x ,y ,x2 ,y2]
@@ -37,16 +52,12 @@ while True:
         scale1= ball_d/ball_size  
         scale=[]
         scale.append(scale1)
-
-
-
-        for listitem in text1:
-            file.write(f'{listitem}\n')       
-   else:
+       #for listitem in text1:
+         #   file.write(f'{listitem}\n')       
+   else :
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
-   cv2.plt.imshow('Tracking',frame)
    if cv2.waitKey(1) & 0XFF==27:
-        break
+          break
 
 
 print (scale)
