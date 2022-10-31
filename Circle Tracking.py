@@ -11,14 +11,15 @@ import os #provides functions for interacting with operating system (OS)
 
 # os.chdir : changes the current working directory to specified path
 # Syntax: os.chdir(path)
-
 os.chdir("C:\\Users\\Ibrahim\\biomechanics")
 
-video = cv.VideoCapture('P2_2_30_1.mp4')  # white ball : P2_1_30_1.mp4 | orange ball: P2_2_30_1.mp4
+name = 'P2_2_30_1.mp4' # white ball : P2_1_30_1.mp4 | orange ball: P2_2_30_1.mp4
+video = cv.VideoCapture(name)  
 prevCircle = None
 dist = lambda x1, y1, x2, y2: (x1-x2)**2 + (y1-y2)**2
-#video = cv.VideoCapture(path)
 
+#video = cv.VideoCapture(path)
+ball_size = 22 #diameter of a regulation ball
 fps_cam = 1500 # Change this to the required fps of the video 
 fps_vid =video.get(cv.CAP_PROP_FPS)
 fps_time= fps_vid / fps_cam
@@ -57,7 +58,7 @@ while True:
             if prevCircle is not None:
                 if dist(chosen[0], chosen[1], prevCircle[0], prevCircle[1]) <= dist(i[0], i[1],prevCircle[0], prevCircle[1]):
                     chosen = i
-
+    
 #drawing circle to detect centre point of object and around the ball itself
 # Where 3 represents thickness of circle
         cv.circle(frame, (chosen[0], chosen[1]), 1, (0,100,100), 3)
@@ -66,7 +67,15 @@ while True:
 
         cv.circle(frame, (chosen[0], chosen[1]), chosen[2], (255,0,255), 3)
         prevCircle = chosen
-
+        #print(chosen) #these print statements are for debugging andhelp with understanding the code.
+        #they do fill up the terminal with information tho
+        
+        ball_d= chosen[2]
+        #print(ball_d)
+        scale1= ball_d/ball_size  
+        scale=[]
+        scale.append(scale1)
+        #print(scale)
 
     cv.imshow("circles", frame)
     #print(float(prevCircle[dist]) - float(chosen[dist]))
@@ -79,6 +88,8 @@ while True:
     
 
 video.release()
+#print (scale)
+
 cv.destroyAllWindows()
 
 
