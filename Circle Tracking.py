@@ -12,12 +12,20 @@ import os #provides functions for interacting with operating system (OS)
 # os.chdir : changes the current working directory to specified path
 # Syntax: os.chdir(path)
 
-os.chdir(r"C:\Users\natha\OneDrive\Documents\Caitlin\Biomech\Trimmed Videos")
+os.chdir("C:\\Users\\Ibrahim\\biomechanics")
 
 video = cv.VideoCapture('P2_2_30_1.mp4')  # white ball : P2_1_30_1.mp4 | orange ball: P2_2_30_1.mp4
 prevCircle = None
 dist = lambda x1, y1, x2, y2: (x1-x2)**2 + (y1-y2)**2
 #video = cv.VideoCapture(path)
+
+fps_cam = 1500 # Change this to the required fps of the video 
+fps_vid =video.get(cv.CAP_PROP_FPS)
+fps_time= fps_vid / fps_cam
+print(fps_time)
+
+
+
 
 while True:    
 
@@ -62,6 +70,9 @@ while True:
 
     cv.imshow("circles", frame)
     #print(float(prevCircle[dist]) - float(chosen[dist]))
+
+
+
 
     if cv.waitKey(1) & 0xFF == ord('q'): break
 
