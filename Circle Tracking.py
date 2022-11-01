@@ -7,7 +7,7 @@ import numpy as np
 import os #provides functions for interacting with operating system (OS)
 import math
 #os.system('cls')
-
+import pandas as pd
 
 # os.chdir : changes the current working directory to specified path
 # Syntax: os.chdir(path)
@@ -97,30 +97,29 @@ cv.destroyAllWindows()
 #print(x_list)
 
 x_diff=[]
-x_len=len(x_list)
+x_len=len(x_list)-1
 #print(x_len)
 
 for i in range(x_len): 
-    y= x_list[i+1] - x_list[i]
-    print(y)
-
-"""   
+    #y= x_list[i] - x_list[i+1]
+    #print(y)
     x_diff.append(x_list[i]-x_list[i+1])
-print(x_diff)
+#print(x_diff)
 
- y_diff=[]
+y_diff=[]
 
 for i in range(x_len): 
     y_diff.append(y_list[i]-y_list[i+1])
-print(y_diff)
+#print(y_diff)
 
 pyth_dist=[]
 pyth_sub=[]
-x2_len=len(x_diff)
+x2_len=len(x_diff)-1
 
 for i in range(x2_len):
     pyth_sub=math.hypot(x_diff[i] , y_diff[i])
     pyth_dist.append(pyth_sub)
- """
 
-#print(pyth_dist)
+print(pyth_dist)
+df = pd.DataFrame(pyth_dist)
+df.to_csv('pyth_dist.csv', index=False)
