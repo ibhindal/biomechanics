@@ -88,8 +88,6 @@ while True:
     #print(float(prevCircle[dist]) - float(chosen[dist]))
 
 
-
-
     if cv.waitKey(1) & 0xFF == ord('q'): break
 
 
