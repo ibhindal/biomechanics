@@ -92,9 +92,9 @@ while True:
 
 video.release()
 
-#distance=np.sqrt(float(chosen[0])**2 + float(chosen[1])**2)
-#print (distance)
+
 #print(x_list)
+
 x_diff=[]
 for i in range(x_list): 
     x_diff.append(x_list[i]-x_list[i+1])
