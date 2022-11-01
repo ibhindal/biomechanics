@@ -96,7 +96,6 @@ cv.destroyAllWindows()
 
 #print(x_list)
 
-#i=0
 x_diff=[]
 x_len=len(x_list)
 #print(x_len)
@@ -110,15 +109,13 @@ for i in range(x_len):
 print(x_diff)
 
  y_diff=[]
-i=0
+
 for i in range(x_len): 
     y_diff.append(y_list[i]-y_list[i+1])
 print(y_diff)
 
 pyth_dist=[]
 pyth_sub=[]
-i=0
-
 x2_len=len(x_diff)
 
 for i in range(x2_len):
