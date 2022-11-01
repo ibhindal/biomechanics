@@ -95,7 +95,7 @@ cv.destroyAllWindows()
 
 
 x_diff=[]
-x_len=len(x_list)-1
+x_len=len(x_list)-1 #minus 1 as python starts with 0 so we dont overflow
 
 for i in range(x_len): 
         x_diff.append(x_list[i]-x_list[i+1])
@@ -115,6 +115,6 @@ for i in range(x2_len):
     pyth_sub=math.hypot(x_diff[i] , y_diff[i])
     pyth_dist.append(pyth_sub)
 
-print(pyth_dist)
+#print(pyth_dist)
 df = pd.DataFrame(pyth_dist)
 df.to_csv('pyth_dist.csv', index=False)
