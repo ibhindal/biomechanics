@@ -109,9 +109,12 @@ print(y_diff)
 pyth_dist=[]
 pyth_sub=[]
 i=0
-while i<len(x_dist):
+while i<len(x_diff):
     pyth_sub=np.sqrt(float(x_diff[i])**2 + float(y_diff[i])**2)
     pyth_dist.append(pyth_sub)
+
+
+print(pyth_dist)
 
         
 cv.destroyAllWindows()
