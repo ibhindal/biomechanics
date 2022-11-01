@@ -5,8 +5,7 @@
 import cv2 as cv
 import numpy as np
 import os #provides functions for interacting with operating system (OS)
-import pandas as pd
-
+import math
 #os.system('cls')
 
 
@@ -96,28 +95,35 @@ cv.destroyAllWindows()
 
 
 #print(x_list)
-i=0
+
+#i=0
 x_diff=[]
-while i<len(x_list): 
+x_len=len(x_list)
+#print(x_len)
+
+for i in range(x_len): 
+    y= x_list[i+1] - x_list[i]
+    print(y)
+
+"""   
     x_diff.append(x_list[i]-x_list[i+1])
 print(x_diff)
 
-y_diff=[]
+ y_diff=[]
 i=0
-while i<len(y_list): 
+for i in range(x_len): 
     y_diff.append(y_list[i]-y_list[i+1])
 print(y_diff)
 
 pyth_dist=[]
 pyth_sub=[]
 i=0
-while i<len(x_diff):
-    pyth_sub=np.sqrt(float(x_diff[i])**2 + float(y_diff[i])**2)
+
+x2_len=len(x_diff)
+
+for i in range(x2_len):
+    pyth_sub=math.hypot(x_diff[i] , y_diff[i])
     pyth_dist.append(pyth_sub)
+ """
 
-
-print(pyth_dist)
-
-        
-
-
+#print(pyth_dist)
