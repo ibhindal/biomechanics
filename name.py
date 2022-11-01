@@ -7,7 +7,10 @@ for x in range(1, 3, 1 ):
         print (name)
         file_name.append(name) 
 
-print (file_name)
+#print (file_name)
+
+i=0
+
 while i<len(file_name): 
     name = file_name[i]
 print (name)
