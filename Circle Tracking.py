@@ -5,6 +5,7 @@
 import cv2 as cv
 import numpy as np
 import os #provides functions for interacting with operating system (OS)
+import pandas as pd
 
 #os.system('cls')
 
@@ -25,8 +26,9 @@ fps_vid =video.get(cv.CAP_PROP_FPS)
 fps_time= fps_vid / fps_cam
 print(fps_time)
 
-
-
+scale=[]
+x_list=[]
+y_list=[]
 
 while True:    
 
@@ -69,13 +71,15 @@ while True:
         prevCircle = chosen
         #print(chosen) #these print statements are for debugging andhelp with understanding the code.
         #they do fill up the terminal with information tho
-        
+
         ball_d= chosen[2]
         #print(ball_d)
-        scale1= ball_d/ball_size  
-        scale=[]
-        scale.append(scale1)
+        scale.append(ball_d/ball_size)  #diameter in pixels or coordinate value / real diameter in cm to give pixel per cm for a scale factor  
+        x_list.append(chosen[0])
+        y_list.append(chosen[1])
+        
         #print(scale)
+        
 
     cv.imshow("circles", frame)
     #print(float(prevCircle[dist]) - float(chosen[dist]))
@@ -85,11 +89,15 @@ while True:
 
     if cv.waitKey(1) & 0xFF == ord('q'): break
 
-    
 
 video.release()
-#print (scale)
 
+#distance=np.sqrt(float(chosen[0])**2 + float(chosen[1])**2)
+#print (distance)
+
+print(x_list)
+
+        
 cv.destroyAllWindows()
 
 

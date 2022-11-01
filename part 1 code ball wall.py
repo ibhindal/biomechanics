@@ -10,7 +10,7 @@ os.chdir("C:\\Users\\Ibrahim\\Desktop\\biomechancs module")
 # Loads the tracker
 tracker = cv2.TrackerKCF_create()
 # Loads a video
-video = cv2.VideoCapture('P2_2_30_1.mp4')
+video = cv2.VideoCapture('P2_1_30_1.mp4')
 #function to read video frame by frame
 ok,frame=video.read()
 # Sets up a variable called bounding box for user to selecct ROI
@@ -25,7 +25,7 @@ print(fps_time)
 
 file = open('videocoord.txt', 'w')
 
-ball_size = 22 #diameter of a regulation ball
+ball_size = 22  
 
 while True:
    ok,frame=video.read()
