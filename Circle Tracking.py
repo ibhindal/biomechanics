@@ -94,8 +94,21 @@ video.release()
 
 #distance=np.sqrt(float(chosen[0])**2 + float(chosen[1])**2)
 #print (distance)
+#print(x_list)
+x_diff=[]
+for i in range(x_list): 
+    x_diff.append(x_list[i]-x_list[i+1])
+print(x_diff)
 
-print(x_list)
+y_diff=[]
+for i in range(y_list): 
+    y_diff.append(y_list[i]-y_list[i+1])
+    print(y_diff)
+
+pyth_dist=[]
+for i in range(x_dist)
+pyth_sub=np.sqrt(float(x_diff[i])**2 + float(y_diff[i])**2)
+pyth_dist.append(pyth_sub)
 
         
 cv.destroyAllWindows()
