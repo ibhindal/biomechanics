@@ -94,19 +94,21 @@ video.release()
 
 
 #print(x_list)
-
+i=0
 x_diff=[]
 while i<len(x_list): 
     x_diff.append(x_list[i]-x_list[i+1])
 print(x_diff)
 
 y_diff=[]
+i=0
 while i<len(y_list): 
     y_diff.append(y_list[i]-y_list[i+1])
 print(y_diff)
 
 pyth_dist=[]
 pyth_sub=[]
+i=0
 while i<len(x_dist):
     pyth_sub=np.sqrt(float(x_diff[i])**2 + float(y_diff[i])**2)
     pyth_dist.append(pyth_sub)
