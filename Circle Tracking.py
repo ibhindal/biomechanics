@@ -94,16 +94,11 @@ video.release()
 cv.destroyAllWindows()
 
 
-#print(x_list)
-
 x_diff=[]
 x_len=len(x_list)-1
-#print(x_len)
 
 for i in range(x_len): 
-    #y= x_list[i] - x_list[i+1]
-    #print(y)
-    x_diff.append(x_list[i]-x_list[i+1])
+        x_diff.append(x_list[i]-x_list[i+1])
 #print(x_diff)
 
 y_diff=[]
