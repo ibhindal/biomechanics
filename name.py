@@ -8,3 +8,7 @@ for x in range(1, 3, 1 ):
         file_name.append(name) 
 
 print (file_name)
+while i<len(file_name): 
+    name = file_name[i]
+print (name)
+    

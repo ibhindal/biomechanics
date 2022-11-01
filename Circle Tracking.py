@@ -14,6 +14,9 @@ import pandas as pd
 # Syntax: os.chdir(path)
 os.chdir("C:\\Users\\Ibrahim\\biomechanics")
 
+
+
+
 name = 'P2_2_30_1.mp4' # white ball : P2_1_30_1.mp4 | orange ball: P2_2_30_1.mp4
 video = cv.VideoCapture(name)  
 prevCircle = None
