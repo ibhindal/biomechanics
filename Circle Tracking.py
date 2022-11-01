@@ -91,6 +91,7 @@ while True:
 
 
 video.release()
+cv.destroyAllWindows()
 
 
 #print(x_list)
@@ -117,6 +118,5 @@ while i<len(x_diff):
 print(pyth_dist)
 
         
-cv.destroyAllWindows()
 
 
