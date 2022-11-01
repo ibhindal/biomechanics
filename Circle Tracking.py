@@ -28,9 +28,9 @@ fps_vid =video.get(cv.CAP_PROP_FPS)
 fps_time= fps_vid / fps_cam
 print(fps_time)
 
-scale=[]
-x_list=[]
-y_list=[]
+scale  = []
+x_list = []
+y_list = []
 
 while True:    
 
