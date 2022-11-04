@@ -37,7 +37,7 @@ for i in range(file_name_len):
     ball_size = 22 #diameter of a regulation ball
     fps_cam = 1500 # Change this to the required fps of the video 
     fps_vid =video.get(cv.CAP_PROP_FPS)
-    fps_time= fps_vid / fps_cam
+    fps_time= fps_vid / fps_cam 
     print(fps_time)
 
     scale  = []
@@ -133,6 +133,13 @@ for i in range(file_name_len):
        realdistcalc=pyth_dist[i]/scale 
     realdist.append(realdistcalc)
 
+    speed=[]
+
+    for i in range(x2_len):
+        speedcalc=realdist[i]/fps_time
+    speed.append(speedcalc)
+
+
     #print(pyth_dist)
-    df = pd.DataFrame(realdist)
+    df = pd.DataFrame(speed)
     df.to_csv('pyth_dist.csv', index=False)
