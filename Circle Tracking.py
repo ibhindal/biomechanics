@@ -20,7 +20,7 @@ for x in range(1, 3, 1 ):
  for y in range(30, 60, 10):
     for z in range(1, 4, 1 ):
         name =("P2_" + str(x) +"_" +str(y) +"_" + str(z)+ ".mp4")
-        print (name)
+        #print (name)
         file_name.append(name) 
 
 #print (file_name)
@@ -39,7 +39,7 @@ for i in range(file_name_len):
     fps_cam = 1500 # Change this to the required fps of the video 
     fps_vid =video.get(cv.CAP_PROP_FPS)
     fps_time= fps_vid / fps_cam 
-    print(fps_time)
+    #print(fps_time)
 
     scale  = []
     x_list = []
@@ -106,7 +106,8 @@ for i in range(file_name_len):
     video.release()
     cv.destroyAllWindows()
 
-
+    scale_ave=scipy.stats.trim_mean(scale, 0.1)
+    
     x_diff=[]
     x_len=len(x_list)-1 #minus 1 as python starts with 0 so we dont overflow
 
@@ -129,16 +130,16 @@ for i in range(file_name_len):
         pyth_dist.append(pyth_sub)
    
     realdist=[]
-   
-    for i in range(x2_len):
-       realdistcalc=pyth_dist[i]/scale 
-    realdist.append(realdistcalc)
-
     speed=[]
-
     for i in range(x2_len):
-        speedcalc=realdist[i]/fps_time
-    speed.append(speedcalc)
+       realdistcalc=(pyth_dist[i]/scale_ave)/fps_time
+    speed.append(realdistcalc)
+
+    
+
+    #for i in range(x2_len):
+      #  speedcalc=realdist[i]/fps_time
+    #speed.append(speedcalc)
 
 
     #print(pyth_dist)
