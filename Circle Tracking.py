@@ -35,7 +35,7 @@ for i in range(file_name_len):
     dist = lambda x1, y1, x2, y2: (x1-x2)**2 + (y1-y2)**2
 
     #video = cv.VideoCapture(path)
-    ball_size = 22 #diameter of a regulation ball
+    ball_size = 0.22 #diameter of a regulation ball in meters
     fps_cam = 1500 # Change this to the required fps of the video 
     fps_vid =video.get(cv.CAP_PROP_FPS)
     fps_time= fps_vid / fps_cam 
@@ -87,7 +87,7 @@ for i in range(file_name_len):
             #print(chosen) #these print statements are for debugging andhelp with understanding the code.
             #they do fill up the terminal with information tho
 
-            ball_d= chosen[2]
+            ball_d= chosen[2]*2
             #print(ball_d)
             scale.append(ball_d/ball_size)  #diameter in pixels or coordinate value / real diameter in cm to give pixel per cm for a scale factor  
             x_list.append(chosen[0])
@@ -128,20 +128,29 @@ for i in range(file_name_len):
     for i in range(x2_len):
         pyth_sub=math.hypot(x_diff[i] , y_diff[i])
         pyth_dist.append(pyth_sub)
-   
+        #print(pyth_dist)
+
+
+
     realdist=[]
     speed=[]
     for i in range(x2_len):
-       realdistcalc=(pyth_dist[i]/scale_ave)/fps_time
-    speed.append(realdistcalc)
+        realdistcalc=(pyth_dist[i]/scale_ave)
+        realdist.append(realdistcalc)
 
+    #print(realdist)
+
+    for item in realdist:
+        if item > 5:
+            realdist.remove(item)
+
+    distlen=len(realdist)-1
     
+    for i in range(distlen):
+        speedcalc=realdist[i]/fps_time
+        speed.append(speedcalc)
 
-    #for i in range(x2_len):
-      #  speedcalc=realdist[i]/fps_time
-    #speed.append(speedcalc)
 
-
-    #print(pyth_dist)
+    print(speed)
     df = pd.DataFrame(speed)
     df.to_csv('pyth_dist.csv', index=False)
