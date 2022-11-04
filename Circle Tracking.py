@@ -134,5 +134,5 @@ for i in range(file_name_len):
     realdist.append(realdistcalc)
 
     #print(pyth_dist)
-    df = pd.DataFrame(pyth_dist)
+    df = pd.DataFrame(realdist)
     df.to_csv('pyth_dist.csv', index=False)
