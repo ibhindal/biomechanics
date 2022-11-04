@@ -6,6 +6,7 @@ import cv2 as cv
 import numpy as np
 import os #provides functions for interacting with operating system (OS)
 import math
+import scipy
 #os.system('cls')
 import pandas as pd
 
