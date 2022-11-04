@@ -141,7 +141,7 @@ for i in range(file_name_len):
     #print(realdist)
 
     for item in realdist:
-        if item > 5:
+        if item > 1:
             realdist.remove(item)
 
     distlen=len(realdist)-1
