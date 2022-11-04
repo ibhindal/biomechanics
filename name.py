@@ -10,8 +10,8 @@ for x in range(1, 3, 1 ):
 #print (file_name)
 
 i=0
-
-while i<len(file_name): 
+file_name_len=len(file_name)
+for i in range(file_name_len): 
     name = file_name[i]
 print (name)
     
