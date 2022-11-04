@@ -126,6 +126,12 @@ for i in range(file_name_len):
     for i in range(x2_len):
         pyth_sub=math.hypot(x_diff[i] , y_diff[i])
         pyth_dist.append(pyth_sub)
+   
+    realdist=[]
+   
+    for i in range(x2_len):
+       realdistcalc=pyth_dist[i]/scale 
+    realdist.append(realdistcalc)
 
     #print(pyth_dist)
     df = pd.DataFrame(pyth_dist)
