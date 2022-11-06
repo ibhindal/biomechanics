@@ -94,7 +94,7 @@ for i in range(file_name_len):
             x_list.append(chosen[0]) #list of x positions of center of ball
             y_list.append(chosen[1]) # list of y positions of center of ball
             
-            print(scale)
+            #print(scale)
             
 
         cv.imshow("circles", frame)
@@ -155,3 +155,7 @@ for i in range(file_name_len):
    # print(speed)
     df = pd.DataFrame(speed)
     df.to_csv('speed.csv', index=False)
+
+
+
+#telegram_send.send(messages=["The code has finished running"]) 
