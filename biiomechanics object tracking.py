@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+
 tracker = cv2.TrackerCSRT_create()
 video = cv2.VideoCapture('video.mp4')
 ok,frame=video.read()
