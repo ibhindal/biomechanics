@@ -9,6 +9,7 @@ import math
 import scipy
 #os.system('cls')
 import pandas as pd
+import telegram_send
 
 # os.chdir : changes the current working directory to specified path
 # Syntax: os.chdir(path)
