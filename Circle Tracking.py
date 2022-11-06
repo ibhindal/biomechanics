@@ -87,13 +87,13 @@ for i in range(file_name_len):
             #print(chosen) #these print statements are for debugging andhelp with understanding the code.
             #they do fill up the terminal with information tho
 
-            ball_d= chosen[2]*2
+            ball_d= chosen[2]*2 #changes radius to diameter of ball
             #print(ball_d)
             scale.append(ball_d/ball_size)  #diameter in pixels or coordinate value / real diameter in cm to give pixel per cm for a scale factor  
-            x_list.append(chosen[0])
-            y_list.append(chosen[1])
+            x_list.append(chosen[0]) #list of x positions of center of ball
+            y_list.append(chosen[1]) # list of y positions of center of ball
             
-            #print(scale)
+            print(scale)
             
 
         cv.imshow("circles", frame)
@@ -106,19 +106,19 @@ for i in range(file_name_len):
     video.release()
     cv.destroyAllWindows()
 
-    scale_ave=scipy.stats.trim_mean(scale, 0.1)
+    scale_ave=scipy.stats.trim_mean(scale, 0.1) #trim_mean 10% either way to remove some extrainious results
     
     x_diff=[]
     x_len=len(x_list)-1 #minus 1 as python starts with 0 so we dont overflow
 
     for i in range(x_len): 
-            x_diff.append(x_list[i]-x_list[i+1])
+            x_diff.append(x_list[i]-x_list[i+1]) #find x distance per frame
     #print(x_diff)
 
     y_diff=[]
 
     for i in range(x_len): 
-        y_diff.append(y_list[i]-y_list[i+1])
+        y_diff.append(y_list[i]-y_list[i+1])  #find y distance per frame
     #print(y_diff)
 
     pyth_dist=[]
@@ -127,7 +127,7 @@ for i in range(file_name_len):
 
     for i in range(x2_len):
         pyth_sub=math.hypot(x_diff[i] , y_diff[i])
-        pyth_dist.append(pyth_sub)
+        pyth_dist.append(pyth_sub) #do pythagoras to find pixel distance per frame
         #print(pyth_dist)
 
 
@@ -136,7 +136,7 @@ for i in range(file_name_len):
     speed=[]
     for i in range(x2_len):
         realdistcalc=(pyth_dist[i]/scale_ave)
-        realdist.append(realdistcalc)
+        realdist.append(realdistcalc) # chande from pixels to meters
 
     #print(realdist)
 
@@ -151,6 +151,6 @@ for i in range(file_name_len):
         speed.append(speedcalc)
 
 
-    print(speed)
+   # print(speed)
     df = pd.DataFrame(speed)
     df.to_csv('speed.csv', index=False)
