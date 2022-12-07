@@ -9,21 +9,21 @@ import math
 import scipy
 #os.system('cls')
 import pandas as pd
-import telegram_send
+#import telegram_send
 
 # os.chdir : changes the current working directory to specified path
 # Syntax: os.chdir(path)
-os.chdir("C:\\Users\\Ibrahim\\biomechanics")
+os.chdir("C:\\Users\\Ibrahim\\desktop")
 
-file_name=[]
-
+file_name=['CL_1_S0001.mp4']
+'''
 for x in range(1, 3, 1 ):
  for y in range(30, 60, 10):
     for z in range(1, 4, 1 ):
         name =("P2_" + str(x) +"_" +str(y) +"_" + str(z)+ ".mp4")
         #print (name)
         file_name.append(name) 
-
+'''
 #print (file_name)
 
 file_name_len=len(file_name)
@@ -37,7 +37,7 @@ for i in range(file_name_len):
 
     #video = cv.VideoCapture(path)
     ball_size = 0.22 #diameter of a regulation ball in meters
-    fps_cam = 1500 # Change this to the required fps of the video 
+    fps_cam = 1000 # Change this to the required fps of the video 
     fps_vid =video.get(cv.CAP_PROP_FPS)
     fps_time= fps_vid / fps_cam 
     #print(fps_time)
@@ -64,7 +64,7 @@ for i in range(file_name_len):
         #Hough Circle Transform :
 
         circles = cv.HoughCircles(blurFrame, cv.HOUGH_GRADIENT, 1.2, 100, 
-                    param1 = 100, param2 = 30, minRadius = 300, maxRadius= 350)  # orange ball
+                    param1 = 100, param2 = 30, minRadius = 100, maxRadius= 350)  # orange ball
 
     # goes through detected circles and selects the "best" one
 
