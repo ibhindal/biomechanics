@@ -5,10 +5,10 @@ import cv2
 import csv
 
 # Load the high-speed video
-video = cv2.VideoCapture("bouncing_ball.mp4")
+video = cv2.VideoCapture("p2_1_30_1.mp4")
 
 # Load the tensorflow model for object detection
-model = tf.keras.models.load_model("object_detection_model.h5")
+model = tf.keras.models.load_model("saved_model.pb")
 
 # Extract the frames that show the ball bouncing against the wall
 frames = []
