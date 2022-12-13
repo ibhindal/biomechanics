@@ -47,7 +47,8 @@ while True:
         if x < x2_wall and y < y2_wall:
             # Increment counter
             num_cont_frames += 1
-            x_def[] = x2-x2_wall
+            x_defe = x2-x2_wall
+            x_def.append(x_defe) 
 
     else:
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
