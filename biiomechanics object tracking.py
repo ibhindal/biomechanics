@@ -13,6 +13,8 @@ bbox = cv2.selectROI(frame)
 ok = tracker.init(frame,bbox)
 
 wall_bbox = cv2.selectROI(frame)
+(x_wall,y_wall,x2_wall,y2_wall) = wall_bbox
+num_cont_frames=0
 
 #video = cv.VideoCapture(path)
 ball_size = 0.22 #diameter of a regulation ball in meters
@@ -24,7 +26,7 @@ fps_time= fps_vid / fps_cam
 scale  = []
 x_list = []
 y_list = []
-
+x_def=[]
 
 
 while True:
@@ -33,6 +35,8 @@ while True:
         break
     ok,bbox=tracker.update(frame)
     if ok:
+
+        
         (x,y,w,h)=[int(v) for v in bbox]
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2,1)
         x2=x+w
@@ -40,6 +44,11 @@ while True:
         scale.append(ball_size/h)  #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor  
         x_list.append(x2) #list of x positions of right edge
         y_list.append(y2) 
+        if x < x2_wall and y < y2_wall:
+            # Increment counter
+            num_cont_frames += 1
+            x_def[] = x2-x2_wall
+
     else:
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
     cv2.imshow('Tracking',frame)
@@ -87,6 +96,11 @@ for i in range(distlen):
     speedcalc=realdist[i]/fps_time
     speed.append(speedcalc)
 
+contact_time=num_cont_frames/fps_cam
+print(contact_time)
+
+realxdef=min(x_def)*scale_ave
+print(realxdef)
 
 df = pd.DataFrame(speed)
 df.to_csv('speed.csv', index=False)
