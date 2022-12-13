@@ -35,8 +35,8 @@ while True:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2,1)
         x2=x+w
         y2=y+h
-        scale.append((w)/ball_size)  #diameter in pixels or coordinate value / real diameter in cm to give pixel per cm for a scale factor  
-        x_list.append(x2) #list of x positions of center of ball
+        scale.append(ball_size/h)  #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor  
+        x_list.append(x2) #list of x positions of right edge
         y_list.append(y2) 
     else:
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
@@ -48,9 +48,7 @@ while True:
 cv2.destroyAllWindows()
 
 
-
-
-scale_ave=scipy.stats.trim_mean(scale, 0.1) #trim_mean 10% either way to remove some extrainious results
+scale_ave=scipy.stats.trim_mean(scale, 0.2) #trim_mean 20% either way to remove some extrainious results
 
 x_diff=[]
 x_len=len(x_list)-1 #minus 1 as python starts with 0 so we dont overflow
@@ -79,8 +77,8 @@ for i in range(x2_len):
 realdist=[]
 speed=[]
 for i in range(x2_len):
-    realdistcalc=(pyth_dist[i]/scale_ave)
-    realdist.append(realdistcalc) # chande from pixels to meters
+    realdistcalc=(pyth_dist[i]*scale_ave)
+    realdist.append(realdistcalc) # change from pixels to meters
 
 #print(realdist)
 
@@ -90,8 +88,10 @@ for item in realdist:
 
 distlen=len(realdist)-1
 
+
 for i in range(distlen):
     speedcalc=realdist[i]/fps_time
+    #print(realdist)
     speed.append(speedcalc)
 
 
