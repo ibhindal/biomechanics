@@ -4,10 +4,10 @@ import os
 import pandas as pd
 import scipy
 import math
-os.chdir("C:\\Users\\Ibrahim\\desktop")
+#os.chdir("C:\\Users\\Ibrahim\\desktop")
 
 tracker = cv2.TrackerCSRT_create()
-video = cv2.VideoCapture('CL_1_S0001.mp4')
+video = cv2.VideoCapture('CL_1_S0003.mp4')
 ok,frame=video.read()
 bbox = cv2.selectROI(frame)
 ok = tracker.init(frame,bbox)
