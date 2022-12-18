@@ -7,7 +7,7 @@ import math
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
 
 tracker = cv2.TrackerCSRT_create()
-video = cv2.VideoCapture('CL_1_S0003.mp4')
+video = cv2.VideoCapture('CL_10_S0001.mp4')
 ok,frame=video.read()
 bbox = cv2.selectROI(frame)
 ok = tracker.init(frame,bbox)
@@ -49,7 +49,8 @@ while True:
             num_cont_frames += 1
             x_defe = x2-x2_wall
             x_def.append(x_defe) 
-
+        print(num_cont_frames)
+    
     else:
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
     cv2.imshow('Tracking',frame)
@@ -100,7 +101,11 @@ for i in range(distlen):
 contact_time=num_cont_frames/fps_cam
 print(contact_time)
 
-realxdef=min(x_def)*scale_ave
+if x_def:
+    realxdef = min(x_def)*scale_ave
+else:
+    realxdef = 0
+
 print(realxdef)
 
 df = pd.DataFrame(speed)
