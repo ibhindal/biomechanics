@@ -94,10 +94,15 @@ for item in realdist:
         realdist.remove(item)
 
 distlen=len(realdist)-1
+x_speed=[]
+y_speed=[]
+for i in range(x2_len):
+    x_speed=x_diff[i]*scale_ave*fps_cam
+    y_speed=y_diff[i]*scale_ave*fps_cam
 
 
 for i in range(distlen):
-    speedcalc=realdist[i]/fps_cam
+    speedcalc=realdist[i]*fps_cam
     speed.append(speedcalc)
 
 contact_time=num_cont_frames/fps_cam
@@ -110,14 +115,9 @@ else:
 
 print(realxdef)
 
-df = pd.DataFrame(speed)
-df.to_csv('speed.csv', index=False)
-
 # Create a dictionary with the data for the table
-data = {'x_wall': x_wall, 'x2_wall': x2_wall, 'xl_list': xl_list}
-
+speeddata={'x_speed': x_speed, 'y_speed': y_speed, 'speed': speed, 'contact_time': contact_time, 'deformation' :realxdef}
 # Create a pandas DataFrame with the data
-df = pd.DataFrame(data)
-
+df = pd.DataFrame(speeddata)
 # Export the DataFrame to a CSV file
-df.to_csv('table.csv', index=False)
+df.to_csv('speed.csv', index=False)
