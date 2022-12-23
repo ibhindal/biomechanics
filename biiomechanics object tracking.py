@@ -25,11 +25,29 @@ fps_vid =video.get(cv2.CAP_PROP_FPS)
 fps_time= fps_vid / fps_cam 
 #print(fps_time)
 
+
+# Initialize variable to track state of ball (in contact with wall or not)
+in_contact = False
+
+# Initialize variable to track whether in_contact has ever been True
+in_contact_ever = False
+
+
+# Initialize lists for inbound and outbound velocities
+inbound_velocities = []
+outbound_velocities = []
+
+# Calculate time interval between frames in seconds
+time_interval = 1 / fps_cam
+
 scale  = []
 x_list = []
 y_list = []
 x_def=[]
-xl_list = []
+inbound_x = []
+inbound_y = []
+outbound_x = []
+outbound_y = []
 
 while True:
     ok,frame=video.read()
@@ -46,13 +64,26 @@ while True:
         scale.append(ball_size/h)  #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor  
         x_list.append(x2) #list of x positions of right edge
         y_list.append(y2) 
-        xl_list.append(x) #list for bug checking
+       
         if x < max(x2_wall, x_wall): #sometimes the bbox is the wrong way around
+            # Set in_contact to True
+            in_contact = True
+            # Set in_contact_ever to True
+            in_contact_ever = True
             # Increment counter
             num_cont_frames = num_cont_frames + 1
             x_defe = x2-x2_wall
             x_def.append(x_defe) 
-        #print(num_cont_frames)
+        else: 
+           in_contact = False 
+
+        if in_contact == False and in_contact_ever==False:
+            inbound_x.append(x2) #list of x positions of right edge
+            inbound_y.append(y2)  
+        
+        if in_contact == False and in_contact_ever==True:
+            outbound_x.append(x2) #list of x positions of right edge
+            outbound_y.append(y2)
     
     else:
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
