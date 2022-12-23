@@ -194,12 +194,33 @@ for i in range(outbound_len):
     outbound_velocity = math.hypot(outbound_x_diff[i], outbound_y_diff[i]) * scale_ave * fps_cam
     outbound_velocities.append(outbound_velocity)
 
-
+corrected_average_inbound_x_velocities = scipy.stats.trim_mean(inbound_x_velocities, 0.2)
+corrected_average_inbound_y_velocities = scipy.stats.trim_mean(inbound_y_velocities, 0.2)
+corrected_average_inbound_velocities = scipy.stats.trim_mean(inbound_velocities, 0.2)
+corrected_average_outbound_x_velocities = scipy.stats.trim_mean(outbound_x_velocities, 0.2)
+corrected_average_outbound_y_velocities = scipy.stats.trim_mean(outbound_y_velocities, 0.2)
+corrected_average_outbound_velocities = scipy.stats.trim_mean(outbound_velocities, 0.2)
 
 
 # Create a dictionary with the data for the table
-speeddata={'x_speed': x_speed, 'y_speed': y_speed, 'speed': speed, 'inbound_x_velocities' : inbound_x_velocities, 'inbound_y_velocities' : inbound_y_velocities, 'inbound_velocities' : inbound_velocities , 'outbound_x_velocities' : outbound_x_velocities, 'outbound_y_velocities' : outbound_y_velocities, 'outbound_velocities' : outbound_velocities, 'contact_time': contact_time, 'deformation' :realxdef}
-# Create a pandas DataFrame with the data
+speeddata={'x_speed': x_speed, 'y_speed': y_speed, 'speed': speed, 'inbound_x_velocities' : inbound_x_velocities, 'inbound_y_velocities' : inbound_y_velocities, 'inbound_velocities' : inbound_velocities , 'outbound_x_velocities' : outbound_x_velocities, 'outbound_y_velocities' : outbound_y_velocities, 'outbound_velocities' : outbound_velocities, 'corrected_average_inbound_x_velocities ': corrected_average_inbound_x_velocities, 'corrected_average_inbound_y_velocities': corrected_average_inbound_y_velocities, 'corrected_average_inbound_velocities': corrected_average_inbound_velocities, 'corrected_average_outbound_x_velocities': corrected_average_outbound_x_velocities, 'corrected_average_outbound_y_velocities': corrected_average_outbound_y_velocities, 'corrected_average_outbound_velocities': corrected_average_outbound_velocities, 'contact_time': contact_time, 'deformation' :realxdef}
+
+# Find the length of the longest array
+max_length = max(len(a) for a in speeddata.values() if isinstance(a, list))
+
+
+
+# Iterate over the items in speeddata
+for key, value in speeddata.items():
+    # If the value is a single float, pad it with np.nan values to make it a list
+    if not isinstance(value, list):
+        value = [value] * max_length
+    # If the value is an array, pad it with np.nan values if it is shorter than the longest array
+    else:
+        value = value + [np.nan] * (max_length - len(value))
+    speeddata[key] = value
+
+# Create a new DataFrame using the padded arrays
 df = pd.DataFrame(speeddata)
 # Export the DataFrame to a CSV file
 filename = file + 'results.csv'
