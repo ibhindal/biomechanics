@@ -147,8 +147,58 @@ else:
 
 print(realxdef)
 
+# Calculate inbound velocities
+inbound_x_diff = []
+inbound_y_diff = []
+# Calculate inbound x- and y-velocities
+inbound_x_velocities = []
+inbound_y_velocities = []
+inbound_len = len(inbound_x) - 1
+
+# Calculate differences between consecutive x and y coordinates
+for i in range(inbound_len):
+    inbound_x_diff.append(inbound_x[i] - inbound_x[i + 1])
+    inbound_y_diff.append(inbound_y[i] - inbound_y[i + 1])
+
+# Calculate inbound velocities in meters per second
+inbound_velocities = []
+for i in range(inbound_len):
+    inbound_x_velocity = inbound_x_diff[i] * scale_ave * fps_cam
+    inbound_x_velocities.append(inbound_x_velocity)
+    inbound_y_velocity = inbound_y_diff[i] * scale_ave * fps_cam
+    inbound_y_velocities.append(inbound_y_velocity)
+    inbound_velocity = math.hypot(inbound_x_diff[i], inbound_y_diff[i]) * scale_ave * fps_cam
+    inbound_velocities.append(inbound_velocity)
+
+# Calculate outbound velocities
+outbound_x_diff = []
+outbound_y_diff = []
+
+outbound_len = len(outbound_x) - 1
+
+# Calculate differences between consecutive x and y coordinates
+for i in range(outbound_len):
+    outbound_x_diff.append(outbound_x[i] - outbound_x[i + 1])
+    outbound_y_diff.append(outbound_y[i] - outbound_y[i + 1])
+
+# Calculate outbound velocities in meters per second
+outbound_velocities = []
+outbound_x_velocities = []
+outbound_y_velocities = []
+
+for i in range(outbound_len):
+    outbound_x_velocity = outbound_x_diff[i] * scale_ave * fps_cam
+    outbound_x_velocities.append(outbound_x_velocity)
+    outbound_y_velocity = outbound_y_diff[i] * scale_ave * fps_cam
+    outbound_y_velocities.append(outbound_y_velocity)
+    outbound_velocity = math.hypot(outbound_x_diff[i], outbound_y_diff[i]) * scale_ave * fps_cam
+    outbound_velocities.append(outbound_velocity)
+
+
+
+
 # Create a dictionary with the data for the table
-speeddata={'x_speed': x_speed, 'y_speed': y_speed, 'speed': speed, 'contact_time': contact_time, 'deformation' :realxdef}
+speeddata={'x_speed': x_speed, 'y_speed': y_speed, 'speed': speed, 'inbound_x_velocities' : inbound_x_velocities, 'inbound_y_velocities' : inbound_y_velocities, 'inbound_velocities' : inbound_velocities , 'outbound_x_velocities' : outbound_x_velocities, 'outbound_y_velocities' : outbound_y_velocities, 'outbound_velocities' : outbound_velocities, 'contact_time': contact_time, 'deformation' :realxdef}
 # Create a pandas DataFrame with the data
 df = pd.DataFrame(speeddata)
 # Export the DataFrame to a CSV file
