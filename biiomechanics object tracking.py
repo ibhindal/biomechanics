@@ -5,9 +5,10 @@ import pandas as pd
 import scipy
 import math
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
+file='CL_10_S0001.mp4'
 
 tracker = cv2.TrackerCSRT_create()
-video = cv2.VideoCapture('CL_10_S0001.mp4')
+video = cv2.VideoCapture(file)
 ok,frame=video.read()
 bbox = cv2.selectROI(frame)
 ok = tracker.init(frame,bbox)
@@ -120,4 +121,5 @@ speeddata={'x_speed': x_speed, 'y_speed': y_speed, 'speed': speed, 'contact_time
 # Create a pandas DataFrame with the data
 df = pd.DataFrame(speeddata)
 # Export the DataFrame to a CSV file
-df.to_csv('speed.csv', index=False)
+filename = file + 'results.csv'
+df.to_csv(filename, index=False)
