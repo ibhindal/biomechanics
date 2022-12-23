@@ -14,6 +14,7 @@ ok = tracker.init(frame,bbox)
 
 wall_bbox = cv2.selectROI(frame)
 (x_wall,y_wall,x2_wall,y2_wall) = wall_bbox
+print(wall_bbox)
 num_cont_frames=0
 
 #video = cv.VideoCapture(path)
@@ -27,7 +28,7 @@ scale  = []
 x_list = []
 y_list = []
 x_def=[]
-
+xl_list = []
 
 while True:
     ok,frame=video.read()
@@ -44,12 +45,13 @@ while True:
         scale.append(ball_size/h)  #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor  
         x_list.append(x2) #list of x positions of right edge
         y_list.append(y2) 
-        if x < x2_wall : 
+        xl_list.append(x) #list for bug checking
+        if x < max(x2_wall, x_wall): #sometimes the bbox is the wrong way around
             # Increment counter
             num_cont_frames = num_cont_frames + 1
             x_defe = x2-x2_wall
             x_def.append(x_defe) 
-        print(num_cont_frames)
+        #print(num_cont_frames)
     
     else:
         cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
@@ -95,7 +97,7 @@ distlen=len(realdist)-1
 
 
 for i in range(distlen):
-    speedcalc=realdist[i]/fps_time
+    speedcalc=realdist[i]/fps_cam
     speed.append(speedcalc)
 
 contact_time=num_cont_frames/fps_cam
@@ -110,3 +112,12 @@ print(realxdef)
 
 df = pd.DataFrame(speed)
 df.to_csv('speed.csv', index=False)
+
+# Create a dictionary with the data for the table
+data = {'x_wall': x_wall, 'x2_wall': x2_wall, 'xl_list': xl_list}
+
+# Create a pandas DataFrame with the data
+df = pd.DataFrame(data)
+
+# Export the DataFrame to a CSV file
+df.to_csv('table.csv', index=False)
