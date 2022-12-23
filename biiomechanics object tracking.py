@@ -44,9 +44,9 @@ while True:
         scale.append(ball_size/h)  #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor  
         x_list.append(x2) #list of x positions of right edge
         y_list.append(y2) 
-        if x < x2_wall and y < y2_wall:
+        if x < x2_wall : 
             # Increment counter
-            num_cont_frames += 1
+            num_cont_frames = num_cont_frames + 1
             x_defe = x2-x2_wall
             x_def.append(x_defe) 
         print(num_cont_frames)
