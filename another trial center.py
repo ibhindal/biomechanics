@@ -11,14 +11,11 @@ from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as viz_utils
 from base64 import b64encode
 
-
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
 PATH_TO_SAVED_MODEL = "C:\\Users\\Ibrahim\\Desktop\\customTF2-20221225T123609Z-001\\customTF2\\data\\inference_graph\\saved_model"
 # Load label map and obtain class names and ids
 #label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 category_index=label_map_util.create_category_index_from_labelmap("C:\\Users\\Ibrahim\\Desktop\\customTF2-20221225T123609Z-001\\customTF2\\data\\label_map.pbtxt",use_display_name=True)
-
-
 
 file = "CL_1_S0003.mp4"
 video = cv2.VideoCapture(file)
@@ -47,7 +44,6 @@ in_contact = False
 # Initialize variable to track whether in_contact has ever been True
 in_contact_ever = False
 
-
 # Initialize lists for inbound and outbound velocities
 inbound_velocities = []
 outbound_velocities = []
@@ -63,7 +59,7 @@ inbound_x = []
 inbound_y = []
 outbound_x = []
 outbound_y = []
-
+w1=[]
 score_thresh = 0.8   # Minimum threshold for object detection
 max_detections = 1
 
@@ -91,17 +87,27 @@ while True:
 
         # Draw bounding box on frame
         (x,y,w,h) = bbox
-        cv2.rectangle(frame, (int(x), int(y)), (int(x+w), int(y+h)), (0,255,0), 2, 1)
+        cv2.rectangle(frame, (int(x), int(y)), (int(x+w), int(y+h)), (0,255,0), 20, 1)
         cv2.imshow('Frame', frame)
+        cv2.waitKey(1)
         x2=x+w
         y2=y+h
         
+        # Calculate center point of bounding box
+        x_center = (x + x2) / 2
+        y_center = (y + y2) / 2
+        
+        # Append x and y center points to lists
+        x_list.append(x_center)
+        y_list.append(y_center)
+        w1.append(w)
+
         # Calculate other variables and metrics using bbox
         scale.append(ball_size/h)  #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor  
-        x_list.append(x2) #list of x positions of right edge
-        y_list.append(y2) 
+        #x_list.append(x2) #list of x positions of right edge
+        #y_list.append(y2) 
          
-        if x < max(x2_wall, x_wall): #sometimes the bbox is the wrong way around
+        if (x_center - w) < max(x2_wall, x_wall): #sometimes the bbox is the wrong way around
             # Set in_contact to True
             in_contact = True
             # Set in_contact_ever to True
@@ -114,12 +120,12 @@ while True:
             in_contact = False 
 
         if in_contact == False and in_contact_ever==False:
-            inbound_x.append(x2) #list of x positions of right edge
-            inbound_y.append(y2)  
+            inbound_x.append(x_center) #list of x positions at center of ball
+            inbound_y.append(y_center) #list of y positions at center of ball  
         
         if in_contact == False and in_contact_ever==True:
-            outbound_x.append(x2) #list of x positions of right edge
-            outbound_y.append(y2)
+            outbound_x.append(x_center) #list of x positions of right edge
+            outbound_y.append(x_center)
             print(outbound_x)
         else:
             cv2.putText(frame,'Error',(100,0),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,255),2)
@@ -238,6 +244,20 @@ corrected_average_inbound_velocities = scipy.stats.trim_mean(inbound_velocities,
 corrected_average_outbound_x_velocities = scipy.stats.trim_mean(outbound_x_velocities, 0.2)
 corrected_average_outbound_y_velocities = scipy.stats.trim_mean(outbound_y_velocities, 0.2)
 corrected_average_outbound_velocities = scipy.stats.trim_mean(outbound_velocities, 0.2)
+
+
+diagnostics={'x_center': x_list, 'w': w1, 'x2_wall':x2_wall, 'x_wall': x_wall }
+# Create a new DataFrame using the padded arrays
+diag = pd.DataFrame(diagnostics)
+# Export the DataFrame to a CSV file
+filename = file + 'results.csv'
+diag.to_csv('diag', index=False)
+
+
+
+
+
+
 
 
 # Create a dictionary with the data for the table

@@ -3,10 +3,8 @@ import time
 import tensorflow as tf
 import cv2
 import numpy as np
-
-from utils import label_map_util
 from PIL import Image
-from google.colab.patches import cv2_imshow
+
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as viz_utils
 
