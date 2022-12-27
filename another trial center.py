@@ -12,7 +12,7 @@ from object_detection.utils import visualization_utils as viz_utils
 from base64 import b64encode
 
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
-PATH_TO_SAVED_MODEL = "C:\\Users\\Ibrahim\\Desktop\\customTF2-20221225T123609Z-001\\customTF2\\data\\inference_graph\\saved_model"
+PATH_TO_SAVED_MODEL = "C:/Users/Ibrahim/Desktop/fine_tuned_model/content/fine_tuned_model/saved_model"
 # Load label map and obtain class names and ids
 #label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 category_index=label_map_util.create_category_index_from_labelmap("C:\\Users\\Ibrahim\\Desktop\\customTF2-20221225T123609Z-001\\customTF2\\data\\label_map.pbtxt",use_display_name=True)
