@@ -14,7 +14,7 @@ import math
 # Set the directory to the current directory
 file= 'CL_1_S0003.mp4'
     
-tracker = cv2.TrackerCSRT_create()
+tracker = cv2.TrackerCSRT.create()
 video = cv2.VideoCapture(file)
 ok,frame=video.read()
 bbox = cv2.selectROI(frame)
