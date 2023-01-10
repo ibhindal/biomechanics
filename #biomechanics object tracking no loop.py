@@ -1,7 +1,7 @@
 #biomechanics object tracking no loop
 
 
-import cv2
+import cv2  # make sure you dont have opencv installed. use opencv-contrib-python
 import numpy as np
 import os
 import pandas as pd
@@ -13,7 +13,7 @@ import math
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
 # Set the directory to the current directory
 file= 'CL_1_S0003.mp4'
-    
+
 tracker = cv2.TrackerCSRT.create()
 video = cv2.VideoCapture(file)
 ok,frame=video.read()
