@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import scipy
 import math
-
+import
 
 # Set the directory to the current directory
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
@@ -98,11 +98,11 @@ while True:
 
 cv2.destroyAllWindows()
 
-scale_ave=scipy.stats.trim_mean(scale, 0.2) #trim_mean 20% either way to remove some extrainious results
+scale_ave=scipy.stats.trim_mean(scale, 0.2) #trim_mean 20% either way to remove some extraneous results
 
 x_diff = []
 y_diff = []
-x_len = len(x_list)-1 #minus 1 as python starts with 0 so we dont overflow
+x_len = len(x_list)-1 #minus 1 as python starts with 0, so we don't overflow
 
 for i in range(x_len):
     x_diff.append(x_list[i]-x_list[i+1]) #find x distance per frame
