@@ -1,13 +1,11 @@
 #biomechanics object tracking no loop
 
-
 import cv2  # make sure you dont have opencv installed. use opencv-contrib-python
 import numpy as np
 import os
 import pandas as pd
 import scipy
 import math
-
 
 
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
