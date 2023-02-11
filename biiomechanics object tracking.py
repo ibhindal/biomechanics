@@ -21,7 +21,7 @@ for file in files:
     # Skip directories
     continue
   # Check if the file is a video file (using the file extension)
-  elif file.endswith('.mp4') or file.endswith('.avi') or file.endswith('.mkv'):
+  elif file.endswith('.mp4'):
     
         tracker = cv2.TrackerCSRT_create()
         video = cv2.VideoCapture(file)

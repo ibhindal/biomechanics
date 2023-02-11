@@ -10,7 +10,7 @@ import math
 
 #os.chdir("C:\\Users\\Ibrahim\\desktop")
 # Set the directory to the current directory
-file= 'CL_1_S0003.mp4'
+file= 'CL_0.6_11.mp4'
 
 tracker = cv2.TrackerCSRT.create()
 video = cv2.VideoCapture(file)
