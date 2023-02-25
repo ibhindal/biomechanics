@@ -1,16 +1,16 @@
 import math
 
 # Define constants
-pixels_to_meters = 0.001758
-half_angle_of_view = 34.3 / 2
+pixels_to_meters  =[]
+half_angle_of_view = []
 x_resolution = 1920
 y_resolution = 1080
 diameter = 0.22
 initial_diameter = 0.22
-t_contact = 0.01
+t_contact = []
 fps = 10000
 time_per_frame = 1 / fps
-force = 100
+force = []
 
 # Load data from input files
 with open('input_file_camera1.txt', 'r') as f:
