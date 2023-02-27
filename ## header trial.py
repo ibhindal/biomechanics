@@ -1,5 +1,6 @@
 ## biomechanics yolo
 #!python detect_or_track.py --weights yolov7_custom.pt --source CL_1_S0003.mp4 --save-txt --name CL_1_S0003
+
 import numpy as np
 import os
 import pandas as pd
