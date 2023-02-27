@@ -130,7 +130,7 @@ y_head_camera2_norm = [(y + h/2) / camera2_resolution[1] for x, y, w, h in head_
 z_head_camera2 = [camera2_position[2] for _ in range(len(head_camera2))]
 
 # Calculate the position of the head in 3D space
-Calculate the position of the head in 3D space
+
 x_head = []
 y_head = []
 z_head = []

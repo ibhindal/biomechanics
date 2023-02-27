@@ -5,7 +5,7 @@ import os
 import pandas as pd
 import scipy
 import math
-import scipy.stats
+import scipy.stats as stats
 
 def perform_analysis(df, fps_cam, scale_ave):
     # Calculate contact time
@@ -71,12 +71,12 @@ def perform_analysis(df, fps_cam, scale_ave):
     corrected_average_outbound_velocities = math.hypot(corrected_average_outbound_y_velocities, corrected_average_outbound_x_velocities)
 
     #Calculate the average inbound and outbound velocity
-    average_inbound_velocity = sum(inbound_velocities) / inbound_len
-    average_outbound_velocity = sum(outbound_velocities) / outbound_len
+    average_inbound_velocity = sum(inbound_velocities) / len(inbound_velocities)
+    average_outbound_velocity = sum(outbound_velocities) / len(outbound_velocities)
 
     #Calculate the standard deviation of the inbound and outbound velocities
-    std_inbound_velocity = statistics.stdev(inbound_velocities)
-    std_outbound_velocity = statistics.stdev(outbound_velocities)
+    std_inbound_velocity = stats.stdev(inbound_velocities)
+    std_outbound_velocity = stats.stdev(outbound_velocities)
 
     #Print the results
     print(f"Corrected Average Inbound Velocity: {corrected_average_inbound_velocities:.2f} m/s")
