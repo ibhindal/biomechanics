@@ -1,33 +1,14 @@
-## biomechanics yolo
-#!python detect_or_track.py --weights yolov7_custom.pt --source CL_1_S0003.mp4 --save-txt --name CL_1_S0003
+#trial with a different approach to the sterio triangulation
 
 import numpy as np
-import os
-import pandas as pd
-import scipy
-import math
-import scipy.stats as stats
 import cv2
 
-
-def stereo_triangulation(K1, dist1, K2, dist2, R, T, img_pts1, img_pts2):
-    """
-    Triangulates a 3D point from two 2D image points using stereo triangulation.
-
-    Args: 
-        K1 (np.ndarray): Intrinsic matrix of camera 1, shape (3,3).
-        dist1 (np.ndarray): Distortion coefficients of camera 1, shape (5,).
-        K2 (np.ndarray): Intrinsic matrix of camera 2, shape (3,3).
-        dist2 (np.ndarray): Distortion coefficients of camera 2, shape (5,).
-        R (np.ndarray): Rotation matrix between the two cameras, shape (3,3).
-        T (np.ndarray): Translation vector between the two cameras, shape (3,1).
-        img_pt1 (np.ndarray): 2D image point from camera 1, shape (2,).
-        img_pt2 (np.ndarray): 2D image point from camera 2, shape (2,).
-       
-    Returns:
-        np.ndarray: 3D point in world coordinate system
-    """
-
+def stereo_triangulation(K1, dist1, K2, dist2, R, T, bbox1, bbox2):
+    # Extract image points from bounding boxes
+    x1, y1, w1, h1 = bbox1
+    x2, y2, w2, h2 = bbox2
+    img_pts1 = np.array([[x1 + w1 / 2, y1 + h1 / 2]], dtype=np.float32)
+    img_pts2 = np.array([[x2 + w2 / 2, y2 + h2 / 2]], dtype=np.float32)
 
     # Normalize image points
     norm_img_pts1 = cv2.undistortPoints(img_pts1, K1, dist1)
@@ -56,12 +37,6 @@ def stereo_triangulation(K1, dist1, K2, dist2, R, T, img_pts1, img_pts2):
 
 
 
-#code to use the triangulation function: 
-# point_3d_world = stereo_triangulation(K1, dist1, K2, dist2, R, T, img_pts1, img_pts2)
-
-
-
-
 def perform_analysis(df, fps_cam, scale_ave):
     # Calculate contact time
     num_cont_frames = len(df)
@@ -77,66 +52,53 @@ def perform_analysis(df, fps_cam, scale_ave):
     # Calculate inbound velocities
     inbound_x = df['inbound_x'].tolist()
     inbound_y = df['inbound_y'].tolist()
-    inbound_z= df['inbound_z'].tolist()
     inbound_x_diff = [abs(inbound_x[i] - inbound_x[i + 1]) for i in range(len(inbound_x) - 1)]
     inbound_y_diff = [abs(inbound_y[i] - inbound_y[i + 1]) for i in range(len(inbound_y) - 1)]
-    inbound_z_diff = [abs(inbound_z[i] - inbound_z[i + 1]) for i in range(len(inbound_z) - 1)]
     filtered_inbound_x_diff = [val for val in inbound_x_diff if val <= 1]
     filtered_inbound_y_diff = [val for val in inbound_y_diff if val <= 1]
-    filtered_inbound_z_diff = [val for val in inbound_z_diff if val <= 1]
     inbound_x_diff = filtered_inbound_x_diff
     inbound_y_diff = filtered_inbound_y_diff
-    inbound_z_diff = filtered_inbound_z_diff
     inbound_y_diff = [abs(value) for value in inbound_y_diff]
     inbound_x_diff = [abs(value) for value in inbound_x_diff]
-    inbound_z_diff = [abs(value) for value in inbound_z_diff]
     inbound_velocities = [(inbound_x_diff[i] * scale_ave * fps_cam, inbound_y_diff[i] * scale_ave * fps_cam) for i in range(len(inbound_x_diff))]
-    #the line above looks wrong
     inbound_x_velocities = [velocity[0] for velocity in inbound_velocities]
     inbound_y_velocities = [velocity[1] for velocity in inbound_velocities]
-    inbound_z_velocities = [velocity[2] for velocity in inbound_velocities]
 
     # Calculate outbound velocities
     outbound_x = df['outbound_x'].tolist()
     outbound_y = df['outbound_y'].tolist()
-    outbound_z = df['outbound_z'].tolist()
     outbound_x_diff = [abs(outbound_x[i] - outbound_x[i + 1]) for i in range(len(outbound_x) - 1)]
     outbound_y_diff = [abs(outbound_y[i] - outbound_y[i + 1]) for i in range(len(outbound_y) - 1)]
-    outbound_z_diff = [abs(outbound_z[i] - outbound_z[i + 1]) for i in range(len(outbound_z) - 1)]
     filtered_outbound_x_diff = [val for val in outbound_x_diff if val <= 1]
     filtered_outbound_y_diff = [val for val in outbound_y_diff if val <= 1]
-    filtered_outbound_z_diff = [val for val in outbound_z_diff if val <= 1]
     outbound_x_diff = filtered_outbound_x_diff
     outbound_y_diff = filtered_outbound_y_diff
-    outbound_z_diff = filtered_outbound_z_diff
     outbound_y_diff = [abs(value) for value in outbound_y_diff]
     outbound_x_diff = [abs(value) for value in outbound_x_diff]
-    outbound_z_diff = [abs(value) for value in outbound_z_diff]
     outbound_velocities = [(outbound_x_diff[i] * scale_ave * fps_cam, outbound_y_diff[i] * scale_ave * fps_cam) for i in range(len(outbound_x_diff))]
-    #check the line above
     outbound_x_velocities = [velocity[0] for velocity in outbound_velocities]
     outbound_y_velocities = [velocity[1] for velocity in outbound_velocities]
-    outbound_z_velocities = [velocity[2] for velocity in outbound_velocities]
 
-    
+    # Filter velocities
+    filtered_outbound_x_velocities = [value for value in outbound_x_velocities if value < 100]
+    filtered_outbound_y_velocities = [value for value in outbound_y_velocities if value < 100]
+    filtered_inbound_x_velocities = [value for value in inbound_x_velocities if value < 100]
+    filtered_inbound_y_velocities = [value for value in inbound_y_velocities if value < 100]
     #Trim the inbound velocities using scipy.stats.trim_mean
     #Use the average of the trimmed values as the corrected average velocity
     corrected_average_inbound_x_velocities = scipy.stats.trim_mean(inbound_x_velocities, 0.2)
     corrected_average_inbound_y_velocities = scipy.stats.trim_mean(inbound_y_velocities, 0.2)
-    corrected_average_inbound_z_velocities = scipy.stats.trim_mean(inbound_z_velocities, 0.2)
 
     #Calculate the corrected average inbound velocity as the Euclidean distance of x and y components
-    corrected_average_inbound_velocities = math.hypot(corrected_average_inbound_y_velocities, corrected_average_inbound_x_velocities, corrected_average_inbound_z_velocities)
+    corrected_average_inbound_velocities = math.hypot(corrected_average_inbound_y_velocities, corrected_average_inbound_x_velocities)
 
     #Trim the outbound velocities using scipy.stats.trim_mean
-
     #Use the average of the trimmed values as the corrected average velocity
     corrected_average_outbound_x_velocities = scipy.stats.trim_mean(outbound_x_velocities, 0.2)
     corrected_average_outbound_y_velocities = scipy.stats.trim_mean(outbound_y_velocities, 0.2)
-    corrected_average_outbound_z_velocities = scipy.stats.trim_mean(outbound_z_velocities, 0.2)
 
     #Calculate the corrected average outbound velocity as the Euclidean distance of x and y components
-    corrected_average_outbound_velocities = math.hypot(corrected_average_outbound_y_velocities, corrected_average_outbound_x_velocities, corrected_average_outbound_z_velocities)
+    corrected_average_outbound_velocities = math.hypot(corrected_average_outbound_y_velocities, corrected_average_outbound_x_velocities)
 
     #Calculate the average inbound and outbound velocity
     average_inbound_velocity = sum(inbound_velocities) / len(inbound_velocities)
@@ -166,8 +128,6 @@ def perform_analysis(df, fps_cam, scale_ave):
 
 
 
-R=np.array([[1,0,0],[0,1,0],[0,0,1]]) #rotation matrix identity matrix as no rotation
-T= np.array([0.5,0,0]) #translation matrix as 50cm in x direction 
 
 
 
@@ -250,22 +210,12 @@ for i, file_name in enumerate(file_names):
     x_def = []
     inbound_x = []
     inbound_y = []
-    inbound_z = []
     outbound_x = []
     outbound_y = []
-    outbound_z = []
     threshold = 0.05 # adjust this value based on your data
 
 
-
-    
-
-    import pandas as pd
-
-    result_dfs = []
-
     for i, df in enumerate(dfs): # Iterate over each DataFrame in the list
-        result_df = pd.DataFrame(columns=['file', 'x1', 'y1', 'x2', 'y2'])
         for j, (index, row) in enumerate(df.iterrows()): # Iterate over each row in the DataFrame
             #x is x center y is y center
             x, y, w, h = row[1], row[2], row[3], row[4]
@@ -274,34 +224,13 @@ for i, file_name in enumerate(file_names):
             x1=x-w/2
             y1=y-h/2
 
-            # Add the file name and x1, y1, x2, y2 to the result dataframe
+            # Add the file name before x, y, w, h
             file_name = f'file{i+1}'
-            result_df = result_df.append({'file': file_name, 'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2}, ignore_index=True)
-        result_dfs.append(result_df)
+            row = [file_name] + row.tolist()
 
-    3d_coord_df = pd.DataFrame(columns=['x1', 'y1', 'z1','x2', 'y2', 'z2'])
-    
-    for i, (index, row) in enumerate(df.iterrows()): # Iterate over each row in the DataFrame
-        for j, df in enumerate(dfs):  
-            namez = f'img_pts{j+1}'  #making it have the right name for the right point.
-            namez= row[1], row[2]
-        x1,y1,z1= stereo_triangulation(K1, dist1, K2, dist2, R, T, img_pts1, img_pts2)
-        x2,y2,z2 = stereo_triangulation(K1, dist1, K2, dist2, R, T, img_pts3, img_pts4)
+            scale.append(ball_size/w)   #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor
 
-        3d_coord_df = 3d_coord_df.append({'file': file_name, 'x1': x1, 'y1': y1, 'z1':z1 'x2': x2, 'y2': y2, 'z2':z2}, ignore_index=True)
-    3d_coord_df.append(3d_coord_df)
-    
-    #i need to change this 2 make it so that for one and two it is ball and for 3 and 4 it is head
-
-
-    #by this point we would have 2 dataframes with a list of 3d coordinates for each frame
-
-    scale.append(ball_size/w)   #meters per pixel.diameter in pixels or coordinate value / real diameter in m to give pixel per m for a scale factor
-                    
-
-    for i, df in enumerate(dfs): # Iterate over each DataFrame in the list
-        for j, (index, row) in enumerate(df.iterrows()):
-            if x1 > x_head: #sometimes the bbox is the wrong way around
+            if x1 < x_head: #sometimes the bbox is the wrong way around
                 # Set in_contact to True
                 in_contact = True
                 # Set in_contact_ever to True
@@ -310,7 +239,6 @@ for i, file_name in enumerate(file_names):
                 num_cont_frames = num_cont_frames + 1
                 x_defe = x2-x_head
                 x_def.append(x_defe)
-
 
             else:
                 in_contact = False
@@ -321,7 +249,6 @@ for i, file_name in enumerate(file_names):
             if in_contact == False and in_contact_ever==True:
                 outbound_x.append(x2) #list of x positions of right edge
                 outbound_y.append(y2)
-                outbound_z.append(z2)
 
             if in_contact == True:
                 if j<len(df)-1:
