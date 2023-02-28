@@ -7,7 +7,59 @@ import pandas as pd
 import scipy
 import math
 import scipy.stats as stats
-import cv2 as cv
+import cv2
+
+
+def stereo_triangulation(K1, dist1, K2, dist2, R, T, img_pts1, img_pts2):
+    """
+    Triangulates a 3D point from two 2D image points using stereo triangulation.
+
+    Args: 
+        K1 (np.ndarray): Intrinsic matrix of camera 1, shape (3,3).
+        dist1 (np.ndarray): Distortion coefficients of camera 1, shape (5,).
+        K2 (np.ndarray): Intrinsic matrix of camera 2, shape (3,3).
+        dist2 (np.ndarray): Distortion coefficients of camera 2, shape (5,).
+        R (np.ndarray): Rotation matrix between the two cameras, shape (3,3).
+        T (np.ndarray): Translation vector between the two cameras, shape (3,1).
+        img_pt1 (np.ndarray): 2D image point from camera 1, shape (2,).
+        img_pt2 (np.ndarray): 2D image point from camera 2, shape (2,).
+       
+    Returns:
+        np.ndarray: 3D point in world coordinate system
+    """
+
+
+    # Normalize image points
+    norm_img_pts1 = cv2.undistortPoints(img_pts1, K1, dist1)
+    norm_img_pts2 = cv2.undistortPoints(img_pts2, K2, dist2)
+
+    # Compute relative pose
+    P1 = np.hstack((np.eye(3), np.zeros((3,1))))
+    P2 = np.hstack((R, T))
+    P2 = np.matmul(K2, P2)
+    E = np.matmul(np.transpose(K2), np.matmul(R, K1))
+    _, R, T, _ = cv2.recoverPose(E, norm_img_pts1, norm_img_pts2)
+    P2 = np.hstack((R, T))
+    P2 = np.matmul(K2, P2)
+
+    # Triangulate 3D point
+    img_pt1_homog = np.hstack((img_pts1, np.ones((1,1))))
+    img_pt2_homog = np.hstack((img_pts2, np.ones((1,1))))
+    point_4d_homog = cv2.triangulatePoints(P1, P2, img_pt1_homog.T, img_pt2_homog.T)
+    point_3d = point_4d_homog[:3,:] / point_4d_homog[3,:]
+
+    # Convert to world coordinate system
+    point_3d_world = np.matmul(R, point_3d) + T
+
+    return point_3d_world
+
+
+
+
+#code to use the triangulation function: 
+# point_3d_world = stereo_triangulation(K1, dist1, K2, dist2, R, T, img_pts1, img_pts2)
+
+
 
 
 def perform_analysis(df, fps_cam, scale_ave):
@@ -100,74 +152,6 @@ def perform_analysis(df, fps_cam, scale_ave):
     })
 
 
-def stereo_calibrate(mtx1, dist1, mtx2, dist2, frames_folder):
-    #read the synched frames
-    images_names = glob.glob(frames_folder)
-    images_names = sorted(images_names)
-    c1_images_names = images_names[:len(images_names)//2]
-    c2_images_names = images_names[len(images_names)//2:]
- 
-    c1_images = []
-    c2_images = []
-    for im1, im2 in zip(c1_images_names, c2_images_names):
-        _im = cv.imread(im1, 1)
-        c1_images.append(_im)
- 
-        _im = cv.imread(im2, 1)
-        c2_images.append(_im)
- 
-    #change this if stereo calibration not good.
-    criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 100, 0.0001)
- 
-    rows = 5 #number of checkerboard rows.
-    columns = 8 #number of checkerboard columns.
-    world_scaling = 1. #change this to the real world square size. Or not.
- 
-    #coordinates of squares in the checkerboard world space
-    objp = np.zeros((rows*columns,3), np.float32)
-    objp[:,:2] = np.mgrid[0:rows,0:columns].T.reshape(-1,2)
-    objp = world_scaling* objp
- 
-    #frame dimensions. Frames should be the same size.
-    width = c1_images[0].shape[1]
-    height = c1_images[0].shape[0]
- 
-    #Pixel coordinates of checkerboards
-    imgpoints_left = [] # 2d points in image plane.
-    imgpoints_right = []
- 
-    #coordinates of the checkerboard in checkerboard world space.
-    objpoints = [] # 3d point in real world space
- 
-    for frame1, frame2 in zip(c1_images, c2_images):
-        gray1 = cv.cvtColor(frame1, cv.COLOR_BGR2GRAY)
-        gray2 = cv.cvtColor(frame2, cv.COLOR_BGR2GRAY)
-        c_ret1, corners1 = cv.findChessboardCorners(gray1, (5, 8), None)
-        c_ret2, corners2 = cv.findChessboardCorners(gray2, (5, 8), None)
- 
-        if c_ret1 == True and c_ret2 == True:
-            corners1 = cv.cornerSubPix(gray1, corners1, (11, 11), (-1, -1), criteria)
-            corners2 = cv.cornerSubPix(gray2, corners2, (11, 11), (-1, -1), criteria)
- 
-            cv.drawChessboardCorners(frame1, (5,8), corners1, c_ret1)
-            cv.imshow('img', frame1)
- 
-            cv.drawChessboardCorners(frame2, (5,8), corners2, c_ret2)
-            cv.imshow('img2', frame2)
-            k = cv.waitKey(500)
- 
-            objpoints.append(objp)
-            imgpoints_left.append(corners1)
-            imgpoints_right.append(corners2)
- 
-    stereocalibration_flags = cv.CALIB_FIX_INTRINSIC
-    ret, CM1, dist1, CM2, dist2, R, T, E, F = cv.stereoCalibrate(objpoints, imgpoints_left, imgpoints_right, mtx1, dist1,
-                                                                 mtx2, dist2, (width, height), criteria = criteria, flags = stereocalibration_flags)
- 
-    print(ret)
-    return R, T
- 
-R, T = stereo_calibrate(mtx1, dist1, mtx2, dist2, 'synched/*')
 
 
 
